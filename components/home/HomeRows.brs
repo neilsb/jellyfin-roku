@@ -145,7 +145,6 @@ function onLatestLoaded(msg)
 
 	itemData = msg.GetData()
 
- 	data = msg.getField()
 	node = msg.getRoSGNode()
 
 	node.unobserveField("content")

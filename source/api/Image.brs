@@ -35,7 +35,7 @@ function PosterImage(id as string, params = {} as object)
   return primary_image
 end function
 
-function ImageURL(id, version = "Primary", params = {})
+function ImageURL(id, version = "Primary", params = {}, imageType = "Items")
   ' set defaults
   if params.maxHeight = invalid then
     param = { "maxHeight" : "384" }
@@ -49,7 +49,7 @@ function ImageURL(id, version = "Primary", params = {})
     param = { "quality" : "90" }
     params.append(param)
   end if
-  url = Substitute("Items/{0}/Images/{1}", id, version)
+  url = Substitute("{0}/{1}/Images/{2}", imageType, id, version)
   ' ?maxHeight=384&maxWidth=256&tag=<tag>&quality=90"
   return buildURL(url, params)
 end function

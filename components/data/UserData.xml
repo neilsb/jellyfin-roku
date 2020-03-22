@@ -6,6 +6,7 @@
     <field id="token" type="string" />
     <field id="server" type="string" />
     <field id="json" type="associativearray" onChange="setDataFromJSON" />
+    <field id="imageURL" type="string" />
     <function name="setServer" />
     <function name="getPreference" />
     <function name="setPreference" />

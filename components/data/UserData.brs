@@ -4,10 +4,15 @@ sub setDataFromJSON()
 end sub
 
 function loadFromJSON(json)
-    m.top.id = json.User.id
 
-    m.top.username = json.User.name
-    m.top.token = json.AccessToken
+    if json.User <> invalid then
+        m.top.id = json.User.id
+        m.top.username = json.User.name
+        m.top.token = json.AccessToken
+    else
+        m.top.id = json.id
+        m.top.username = json.name
+    end if
 end function
 
 function loadFromRegistry(id as string)

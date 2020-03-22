@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+ 
+<component name="LoginServerData" extends="ContentNode">
+ 
+<interface> 
+  <field id="labelText" type="string" />
+  <field id="label2Text" type="string" />
+  <field id="posterUrl" type="string" />
+</interface>
+
+</component>

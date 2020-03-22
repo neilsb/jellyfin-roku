@@ -18,12 +18,17 @@ sub Main()
   app_start:
   m.overhang.title = ""
   ' First thing to do is validate the ability to use the API
-  LoginFlow()
+'  LoginFlow()
+
+  group = CreateObject("roSGNode", "Login")
+  m.scene.appendChild(group)
+
+
 
   ' load home page
-  m.overhang.title = "Home"
-  m.overhang.currentUser = m.user.Name
-  group = CreateHomeGroup()
+  ' m.overhang.title = "Home"
+  ' m.overhang.currentUser = m.user.Name
+  ' group = CreateHomeGroup()
   m.scene.appendChild(group)
 
   m.scene.observeField("backPressed", m.port)

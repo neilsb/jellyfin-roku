@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="Login" extends="JFGroup">
+  <children>
+
+    <Label text="Hello" translation="[100,100]" />
+
+
+
+    <MarkupList
+        id="LoginServerList"
+        itemComponentName="LoginServerItem"
+        itemSize="[400, 50]"
+        itemSpacing="[0, 10]"
+        translation="[760,577]"
+        numrows = "7"
+        focusrow = "0"
+        focusBitmapBlendColor = "#AA5CC3ff"
+
+    />
+
+
+
+    <MarkupList
+        id="LoginUserList"
+        itemComponentName="LoginUserItem"
+        itemSize="[400, 80]"
+        itemSpacing="[0, 10]"
+        translation="[760,577]"
+        numrows = "7"
+        focusrow = "0"
+        focusBitmapBlendColor = "#AA5CC3ff"
+        opacity = "0"
+
+    />
+
+
+
+    <Rectangle
+      opacity="0.8"
+      id="testRectangle"
+      color="0x101010FF"
+      width="500"
+      height="300"
+      translation="[50,200]" />
+    <Rectangle
+      opacity="0.8"
+      id="testRectangle2"
+      color="0x101010FF"
+      width="500"
+      height="300"
+      translation="[50,575]" />
+
+    <LayoutGroup translation="[760,450]" id="addServerGroup" visible="false">
+      <Label text="Add Server" />
+
+      <Label text="Server name or URL" />
+      <TextEditBox id="serverUrl" />
+      <Label text="e.g. 192.168.1.50 or https://myserver.com:1234/jellyfin" />
+      <button id="savebutton" text="Save" />
+
+    </LayoutGroup>
+
+
+
+    <Animation id="serverListAnimation" 
+       duration="0.75"
+       repeat="false" 
+       easeFunction="outQuad" >
+       <Vector2DFieldInterpolator id = "serverSlide"
+          key="[0.0, 0.5, 1.0]"
+          keyValue="[ [760, 577], [100, 577], [100, 577] ]"
+          fieldToInterp="LoginServerList.translation" />
+    </Animation>
+
+    <Animation id="userListAnimation" 
+       duration="0.75"
+       repeat="false" 
+       easeFunction="linear" >
+       <FloatFieldInterpolator id = "userListOpacity"
+          key="[0.0, 0.5, 1.0]"
+          keyValue="[ 0, 0, 1 ]"
+          fieldToInterp="LoginUserList.opacity" />
+    </Animation>
+
+
+
+
+</children>
+  <script type="text/brightscript" uri="Login.brs" />
+</component>

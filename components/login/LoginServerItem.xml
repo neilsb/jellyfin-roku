@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<component name="LoginServerItem" extends="Group">
+
+
+    <children>
+        <Poster id="itemImage" translation="[5,3]" width="40" height="40" />
+        <Label id="itemText" font="font:MediumSystemFont" color="0xffffffff" translation="[60,3]" />
+        <Label id="item2Text" font="font:SmallestSystemFont" color="0xabababff" translation="[60,28]" />
+    </children>
+
+    <interface>
+        <field id="itemContent" type="node" onChange="itemContentChanged" />
+    </interface>
+
+    <script type="text/brightscript" uri="LoginServerItem.brs" />
+</component>
