@@ -7,8 +7,13 @@
 
     ' If user has no image, assign color and default user image
     if itemData.imageURL.len() = 0 then
+      if itemData.id = "-1" then
+        m.itemImage.uri = "pkg:/images/key.png"
+        m.avatarBackground.color = "#FF0000"
+      else
         m.itemImage.uri = "pkg:/images/avatar.png"
         m.avatarBackground.color = avatarBackgrounds[rnd(avatarBackgrounds.count()) - 1]
+      end if
     end if 
 
 

@@ -184,6 +184,14 @@ function onUserListLoaded(msg) as void
         users.appendChild(user)
     end for
 
+    ' Add Manual Login item
+    manualLogin = CreateObject("roSGNode", "UserData")
+    manualLogin.username = "Manual Login"
+    manualLogin.id = "-1"
+    users.appendChild(manualLogin)
+
+
+
 
     m.loginUserList.content = users
     sizeUserList()
