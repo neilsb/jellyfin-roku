@@ -138,7 +138,7 @@ function getMarkupListData() as object
         dataItem = data.CreateChild("LoginServerData")
         dataItem.posterUrl = "pkg:/images/server.png"
         dataItem.labelText = "Server 3"
-        dataItem.label2Text = "http://192.168.1.50:8096"
+        dataItem.label2Text = "http://192.168.1.40:8096"
 
         dataItem = data.CreateChild("LoginServerData")
         dataItem.posterUrl = "pkg:/images/server.png"
@@ -170,6 +170,23 @@ function onFocusChanged() as void
 end function
 
 
+'
+' "Server Error" dialog dismissed
+sub dialogClosed(msg)
+
+    ' Clean up Dialog
+    sourceNode = msg.getRoSGNode()
+	sourceNode.unobserveField("buttonSelected")
+	sourceNode.unobserveField("wasClosed")
+    sourceNode.close = true
+
+    ' Re-focus the Server List
+    userListFocus(false)
+    serverListFocus(true)
+end sub
+
+'
+' User list loaded by Task
 function onUserListLoaded(msg) as void
 
     userData = msg.GetData()
@@ -177,8 +194,22 @@ function onUserListLoaded(msg) as void
 	sourceNode = msg.getRoSGNode()
 	sourceNode.unobserveField("content")
 
-    users = CreateObject("roSGNode", "ContentNode")
+    ' If there was an error - display Dialog
+    if sourceNode.error = true then
 
+      dialog = createObject("roSGNode", "Dialog")
+      dialog.title = tr("Error Contacting Server")
+      dialog.buttons = [tr("OK")]
+      dialog.message = tr("Unable to connnect to selected server.")
+      dialog.observeField("buttonSelected", "dialogClosed")
+      dialog.observeField("wasClosed", "dialogClosed")
+      m.top.getScene().dialog = dialog
+      return
+
+    end if
+
+
+    users = CreateObject("roSGNode", "ContentNode")
 
     for each user in userData
         users.appendChild(user)
@@ -208,15 +239,27 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         if m.loginServerList.hasFocus() = true then
             if key = "OK" OR Key = "right"
 
-                ' Load the users form the server
-                m.LoadItemsTask = createObject("roSGNode", "ServerInfoTask")
-                m.LoadItemsTask.observeField("content", "onUserListLoaded")
-                m.LoadItemsTask.control = "RUN"
+                ' Get selected item
+                
+                print "Selected Item Index" m.loginServerList.itemFocused
 
-                serverListFocus(false)
-                userListFocus(true)
+                selectedItem = m.loginServerList.content.getChild(m.loginServerList.itemFocused)
 
-                print "Server Selected"
+                if selectedItem.label2Text = "" and selectedItem.labelText = "Add Server" then
+
+                else
+                    ' Load the users form the server
+                    m.loginUserList.content = CreateObject("roSGNode", "ContentNode")
+                    m.LoadItemsTask = createObject("roSGNode", "ServerInfoTask")
+                    m.LoadItemsTask.serverUrl = selectedItem.label2Text
+                    m.LoadItemsTask.observeField("content", "onUserListLoaded")
+                    m.LoadItemsTask.control = "RUN"
+
+                    serverListFocus(false)
+                    userListFocus(true)
+
+                    print "Server Selected"
+                end if
 
             else if key = "back"
                 print "Exiting from Server Select"

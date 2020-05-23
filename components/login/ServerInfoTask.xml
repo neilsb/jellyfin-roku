@@ -2,7 +2,9 @@
 
 <component name="ServerInfoTask" extends="Task">
   <interface>
+    <field id="serverUrl" type="string" />
     <field id="content" type="array" />
+    <field id="error" type="boolean" value="false" />
   </interface>
   <script type="text/brightscript" uri="ServerInfoTask.brs" />
   <script type="text/brightscript" uri="pkg:/source/api/Items.brs" />
