@@ -6,7 +6,7 @@
         id="overlayBackground"
         color="#000000"
         width="1920"
-        height="150"
+        height="125"
         translation="[0,0]" />
     </LayoutGroup>
     <Poster id="overlayLogo"
@@ -36,7 +36,7 @@
       </LayoutGroup>
     </LayoutGroup>
 
-    <LayoutGroup layoutDirection="horiz" horizAlignment="right" translation="[1820, 120]" vertAlignment="custom">
+    <LayoutGroup layoutDirection="horiz" horizAlignment="right" translation="[1820, 125]" vertAlignment="custom">
         <Label id="overlayOptionsStar" font="font:LargeSystemFont" text="*"   />
         <Label id="overlayOptionsText" font="font:SmallSystemFont" text="Options" translation="[0,6]" />
     </LayoutGroup>
