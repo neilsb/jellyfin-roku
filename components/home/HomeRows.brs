@@ -36,8 +36,9 @@ sub updateSize()
   itemWidth = 480
   itemHeight = 330
 
-  m.top.rowCounterRightOffset = 80
-  m.top.itemSize = [1920 - 111 - 27, itemHeight]
+  'Set width of Rows to cut off at edge of Safe Zone
+  m.top.itemSize = [1703, itemHeight]
+
   ' spacing between rows
   m.top.itemSpacing = [0, 105]
 
