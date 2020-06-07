@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="ItemGrid2" extends="JFGroup">
+  <children>
+    <poster id="backdrop" 
+      loadDisplayMode="scaleToFill"
+      width="1920"
+      height="1080" 
+      opacity="0.25"
+      />
+    <poster id="backdropTransition" 
+      loadDisplayMode="scaleToFill"
+      width="1920"
+      height="1080" 
+      opacity="0.25"
+      />
+    <MarkupGrid 
+      id = "exampleMarkupGrid" 
+      translation = "[ 96, 160 ]" 
+      itemComponentName = "GridItem" 
+      numColumns = "6" 
+      numRows = "5" 
+      vertFocusAnimationStyle = "fixed"
+      itemSize = "[ 286, 425 ]" 
+      itemSpacing = "[ 0, 45 ]" 
+      drawFocusFeedback = "false" />  
+      <!-- <Group  translation = "[ 96, 160 ]" width="286" height="425" >
+        <BusySpinner id="loading" uri="pkg:/images/busyspinner_hd.png" visible = "true" translation="[20,20]" />
+        <SimpleLabel text="Loading..." />
+      </Group> -->
+      
+    <Animation  id="testAnimation"  duration="1"  repeat="false"  easeFunction="linear" >
+        <FloatFieldInterpolator    id = "fadeinLoading"   key="[0.0, 1.0]"    keyValue="[ 0.00, 0.25 ]" fieldToInterp="backdropTransition.opacity"   />
+        <FloatFieldInterpolator    id = "fadeoutLoaded"   key="[0.0, 1.0]"    keyValue="[ 0.25, 0.00 ]" fieldToInterp="backdrop.opacity"   />
+    </Animation>
+
+  </children>
+  <interface>
+    <field id="bgUrl" type="string" onChange="setBackground" />
+    <field id="itemsPerRow" type="int" />
+    <field id="itemId" type="string" onChange="LibrarySet" />
+    <field id="objects" type="associativearray" onChange="setupRows" />
+    <field id="escapeButton" type="string" alwaysNotify="true" />
+  </interface>
+  <script type="text/brightscript" uri="ItemGrid2.brs" />
+</component>

@@ -196,8 +196,9 @@ function CreateHomeGroup()
 end function
 
 function CreateMovieListGroup(libraryId)
-  group = CreateObject("roSGNode", "Movies")
+  group = CreateObject("roSGNode", "ItemGrid2")
   group.id = libraryId
+  group.itemId = libraryId
 
   group.observeField("movieSelected", m.port)
 
@@ -221,25 +222,25 @@ function CreateMovieListGroup(libraryId)
        {display: tr("Ascending"), value: "Ascending"}
      ]}
   ]
-  new_options = []
-  for each opt in movie_options
-    o = CreateObject("roSGNode", "OptionsData")
-    o.title = tr(opt.title)
-    o.choices = opt.values
-    o.base_title = tr(opt.base_title)
-    o.config_key = opt.key
-    o.value = get_user_setting(opt.key, opt.default)
-    new_options.append([o])
-  end for
+  ' new_options = []
+  ' for each opt in movie_options
+  '   o = CreateObject("roSGNode", "OptionsData")
+  '   o.title = tr(opt.title)
+  '   o.choices = opt.values
+  '   o.base_title = tr(opt.base_title)
+  '   o.config_key = opt.key
+  '   o.value = get_user_setting(opt.key, opt.default)
+  '   new_options.append([o])
+  ' end for
 
-  sidepanel.options = new_options
-  sidepanel.observeField("closeSidePanel", m.port)
+  ' sidepanel.options = new_options
+  ' sidepanel.observeField("closeSidePanel", m.port)
 
-  p = CreatePaginator()
-  group.appendChild(p)
+  ' p = CreatePaginator()
+  ' group.appendChild(p)
 
-  group.pageNumber = 1
-  p.currentPage = group.pageNumber
+  ' group.pageNumber = 1
+  ' p.currentPage = group.pageNumber
 
   MovieLister(group, m.page_size)
 
@@ -401,16 +402,16 @@ function MovieLister(group, page_size)
   sort_order = get_user_setting("movie_sort_order", "Ascending")
   sort_field = get_user_setting("movie_sort_field", "SortName")
 
-  item_list = ItemList(group.id, {"limit": page_size,
-    "StartIndex": page_size * (group.pageNumber - 1),
+  item_list = ItemList(group.id, {"limit": 50,
+    "StartIndex": 0,
     "SortBy": sort_field,
     "SortOrder": sort_order,
     "IncludeItemTypes": "Movie"
   })
   group.objects = item_list
 
-  p = group.findNode("paginator")
-  p.maxPages = div_ceiling(group.objects.TotalRecordCount, page_size)
+'  p = group.findNode("paginator")
+'  p.maxPages = div_ceiling(group.objects.TotalRecordCount, page_size)
 end function
 
 function SeriesLister(group, page_size)

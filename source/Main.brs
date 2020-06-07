@@ -10,6 +10,7 @@ sub Main()
   m.scene = m.screen.CreateScene("JFScene")
   m.screen.show()
 
+
   ' Set any initial Global Variables
   m.global = m.screen.getGlobalNode()
   m.global.addFields( {app_loaded: false} )
@@ -32,6 +33,9 @@ sub Main()
   m.overhang.showOptions = true
   group = CreateHomeGroup()
   m.scene.appendChild(group)
+
+'  SafeZone(m.scene)
+
 
   m.scene.observeField("backPressed", m.port)
   m.scene.observeField("optionsPressed", m.port)
