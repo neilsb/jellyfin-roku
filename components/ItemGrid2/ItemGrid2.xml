@@ -23,14 +23,15 @@
       itemSize = "[ 286, 425 ]" 
       itemSpacing = "[ 0, 45 ]" 
       drawFocusFeedback = "false" />  
-      <!-- <Group  translation = "[ 96, 160 ]" width="286" height="425" >
-        <BusySpinner id="loading" uri="pkg:/images/busyspinner_hd.png" visible = "true" translation="[20,20]" />
+
+      <Group id="loadingSpinner"  translation = "[ 96, 160 ]">
+        <BusySpinner uri="pkg:/images/busyspinner_hd.png" visible = "true" translation="[20,20]" />
         <SimpleLabel text="Loading..." />
-      </Group> -->
-      
-    <Animation  id="testAnimation"  duration="1"  repeat="false"  easeFunction="linear" >
-        <FloatFieldInterpolator    id = "fadeinLoading"   key="[0.0, 1.0]"    keyValue="[ 0.00, 0.25 ]" fieldToInterp="backdropTransition.opacity"   />
-        <FloatFieldInterpolator    id = "fadeoutLoaded"   key="[0.0, 1.0]"    keyValue="[ 0.25, 0.00 ]" fieldToInterp="backdrop.opacity"   />
+      </Group>
+
+    <Animation  id="backroundSwapAnimation"  duration="1"  repeat="false"  easeFunction="linear" >
+        <FloatFieldInterpolator id = "fadeinLoading" key="[0.0, 1.0]" keyValue="[ 0.00, 0.25 ]" fieldToInterp="backdropTransition.opacity" />
+        <FloatFieldInterpolator id = "fadeoutLoaded" key="[0.0, 1.0]" keyValue="[ 0.25, 0.00 ]" fieldToInterp="backdrop.opacity" />
     </Animation>
 
   </children>

@@ -4,7 +4,7 @@ sub init()
   m.backdrop = m.top.findNode("backdrop")
   m.backdropT = m.top.findNode("backdropTransition")
 
-  m.swapAnimation = m.top.findNode("testAnimation")
+  m.swapAnimation = m.top.findNode("backroundSwapAnimation")
   m.swapAnimation.observeField("state", "swapDone")
   
 
@@ -14,9 +14,7 @@ sub init()
   m.loadedRows = 0
   m.loadedItems = 0
 
-  m.spinner = CreateObject("roSGNode", "BusySpinner")
-  m.spinner.uri="pkg:/images/busyspinner_hd.png"
-  m.spinner.visible = true
+  m.spinner = m.top.findNode("loadingSpinner")
 
   m.data.appendChild(m.spinner)
   m.itemGrid.content = m.data
@@ -53,6 +51,7 @@ sub ItemDataLoaded(msg)
   data = msg.getField()
 
   if itemData = invalid then 
+    m.spinner.visible = false
     m.Loading = false
     return 
   end if
@@ -64,6 +63,7 @@ sub ItemDataLoaded(msg)
   'Update the stored counts
   m.loadedItems = m.itemGrid.content.getChildCount() 
   m.loadedRows = m.loadedItems / m.itemGrid.numColumns
+  m.spinner.visible = false
   m.Loading = false
 end sub
 
