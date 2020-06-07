@@ -1,6 +1,6 @@
 sub init()
 
-  m.markupgrid = m.top.findNode("exampleMarkupGrid")
+  m.itemGrid = m.top.findNode("itemGrid")
   m.backdrop = m.top.findNode("backdrop")
   m.backdropT = m.top.findNode("backdropTransition")
 
@@ -12,148 +12,90 @@ sub init()
   m.data = CreateObject("roSGNode", "ContentNode")
 
   m.loadedRows = 0
+  m.loadedItems = 0
 
   m.spinner = CreateObject("roSGNode", "BusySpinner")
   m.spinner.uri="pkg:/images/busyspinner_hd.png"
   m.spinner.visible = true
 
   m.data.appendChild(m.spinner)
-  m.markupgrid.content = m.data
+  m.itemGrid.content = m.data
+  m.itemGrid.setFocus(true)
+  m.itemGrid.observeField("itemFocused", "onItemFocused")
+
 
   m.backdropT.observeField("loadStatus", "newBGLoaded")
 
   m.bgToLoad = ""
 
-  'updateSize()
-end sub
 
-sub updateSize()
-  m.markupgrid.numRows = 5
-  if m.markupgrid.numColumns = invalid or m.markupgrid.numColumns = 0 then
-    m.markupgrid.numColumns = 6
-  end if
-
-  dimensions = m.top.getScene().currentDesignResolution
-
-  border = 75
-  topSpace = border + 105
-'  m.markupgrid.translation = [border, topSpace]
-
-  spaceBetween = 20
-
-  itemWidth = (1726 - ((m.markupgrid.numColumns - 1) * spaceBetween)) / m.markupgrid.numColumns
-
-
-
-  ' 1726
-
-
-  textHeight = 100
-  'itemWidth = (dimensions["width"] - border*2) / m.markupgrid.numColumns -20
-  itemHeight = itemWidth * 1.5 + textHeight
-
-'  if itemHeight*m.markupgrid.numRows > (dimensions["height"] - border - 115) then
-'    ratio = (itemHeight*m.markupgrid.numRows) / (981 - topSpace - 15)
-'    itemHeight = itemHeight / ratio
-'    itemWidth = itemWidth / ratio
-'  end if
-'  m.top.visible = true
-
-  ' Size of the individual rows
-'  m.top.itemSize = [dimensions["width"] - border*2, itemHeight]
-  ' Spacing between Rows
-'  m.top.itemSpacing = [ 0, 10]
-
-  ' Size of items in the row
-  m.markupgrid.itemSize = [ itemWidth, itemHeight ]
-  ' Spacing between items in the row
-  itemSpace = 20 ' (dimensions["width"] - border*2 - itemWidth*m.markupgrid.numColumns) / (m.markupgrid.numColumns-1)
-  m.markupgrid.itemSpacing = [ itemSpace-1, 0 ]
+  m.loadItemsTask = createObject("roSGNode", "LoadItemsTask2")
+  
 end sub
 
 
 
 
-
-sub LibrarySet() 
-
-  loadLatest = createObject("roSGNode", "LoadItemsTask2")
-  loadLatest.itemId = m.top.itemId
-
-'  metadata = { "title" : lib.name }
-'  metadata.Append({ "contentType" : lib.json.CollectionType })
-'  loadLatest.metadata = metadata
-
-  loadLatest.observeField("content", "ItemDataLoaded")
-  loadLatest.control = "RUN"
-
-
+'
+'Load initial set of Data
+sub loadInitialItems() 
+  m.loadItemsTask.itemId = m.top.itemId
+  m.loadItemsTask.observeField("content", "ItemDataLoaded")
+  m.loadItemsTask.itemType = "Movie"
+  m.loadItemsTask.control = "RUN"
 end sub
 
-
+'
+'Handle loaded data, and add to Grid
 sub ItemDataLoaded(msg)
-
+ 
   itemData = msg.GetData()
-
   data = msg.getField()
-  node = msg.getRoSGNode()
-  node.unobserveField("content")
 
-  if itemData = invalid then return 
+  if itemData = invalid then 
+    m.Loading = false
+    return 
+  end if
 
   for each item in itemData
     m.data.appendChild(item)
   end for
 
-
-  m.markupgrid.content = m.data
-
-  m.loadedRows = m.markupgrid.content.getChildCount() / m.markupgrid.numColumns
-
-  m.markupgrid.setFocus(true)
-
-  m.markupgrid.observeField("itemFocused", "onItemFocused")
-
+  'Update the stored counts
+  m.loadedItems = m.itemGrid.content.getChildCount() 
+  m.loadedRows = m.loadedItems / m.itemGrid.numColumns
+  m.Loading = false
 end sub
-
 
 
 
 sub onItemFocused()
 
-  moo = CInt(m.markupgrid.itemFocused / m.markupgrid.numColumns) + 1
- ' print "New Focus Item - Row "  moo
+  focusedRow = CInt(m.itemGrid.itemFocused / m.itemGrid.numColumns) + 1
 
   ' Set Background
-  itemInt = m.markupgrid.itemFocused
-  child = m.markupgrid.content.getChild(m.markupgrid.itemFocused)
+  itemInt = m.itemGrid.itemFocused
+  child = m.itemGrid.content.getChild(m.itemGrid.itemFocused)
 
   if itemInt = 0 return
 
 
-'  print "Item Number " itemInt
-
-  print "New item focused - Current Animation Status: " m.swapAnimation.state
 
   if m.swapAnimation.state = "stopped" then
     
     if m.backdropT.loadStatus = "ready" then
-      print "Swapping images"
       m.backdrop.uri = m.backdropT.uri
       m.backdrop.opacity = 0.25
       m.backdropT.opacity = 0
     end if
-    print "Setting new image"
-    m.backdropt.uri = m.markupgrid.content.getChild(m.markupgrid.itemFocused).backdropUrl
+    m.backdropt.uri = m.itemGrid.content.getChild(m.itemGrid.itemFocused).backdropUrl
 
   else
-    m.bgToLoad = m.markupgrid.content.getChild(m.markupgrid.itemFocused).backdropUrl
-    print "!!!! Think this is the problem...."
+    m.bgToLoad = m.itemGrid.content.getChild(m.itemGrid.itemFocused).backdropUrl
   end if
 
-
-
-  if moo >= m.loadedRows - 3 then
+  ' Load more data if focus is within last 3 rows, and there are more items to load
+  if focusedRow >= m.loadedRows - 3 and m.loadeditems < m.loadItemsTask.totalRecordCount then
     loadMoreData()
   end if
 
@@ -187,86 +129,13 @@ sub swapDone()
 
 end sub
 
-
+'
+'Load next set of items
 sub loadMoreData()
 
-  if m.Loading = true then
-    print "------ ALREADY LOADING!!!"
-    return
-  end if
+  if m.Loading = true then return
 
   m.Loading = true
-
-  print "Loading from start index: " m.markupgrid.content.getChildCount()
-
-  loadMore = createObject("roSGNode", "LoadItemsTask2")
-  loadMore.itemId = m.top.itemId
-  loadMore.startIndex = m.markupgrid.content.getChildCount()
-  loadMore.itemType = "Movie"
-
-'  metadata = { "title" : lib.name }
-'  metadata.Append({ "contentType" : lib.json.CollectionType })
-'  loadLatest.metadata = metadata
-
-  loadMore.observeField("content", "moreDataLoaded")
-  loadMore.control = "RUN"
-
-
-end sub
-
-
-
-sub moreDataLoaded(msg)
-  
-  print "More Data Loaded"
-
-  itemData = msg.GetData()
-
-  data = msg.getField()
-  node = msg.getRoSGNode()
-  node.unobserveField("content")
-
-
-  if itemData = invalid then 
-    m.Loading = false
-    return 
-  end if
-
-  for each item in itemData
-    m.data.appendChild(item)
-  end for
-
-
-'  m.markupgrid.content = m.data
-
-  m.loadedRows = m.markupgrid.content.getChildCount() / m.markupgrid.numColumns
-
- ' m.markupgrid.setFocus(true)
-
-  'm.markupgrid.observeField("itemFocused", "onItemFocused")
-
-  print "New Total Items " m.markupgrid.content.getChildCount()
-  print "New toral rows " m.loadedRows
-
-    m.Loading = false
-
-end sub
-
-
-sub setBackground()
-  print "Setting Background!!!!!!!!!!!!!!!!!" m.top.bgUrl
-end sub
-
-
-sub SetupRows()
-
-
-  ' for each item in m.top.objects.Items
-  '     moo = CreateObject("roSGNode", "ContentNode")
-  '     moo.title = item.title
-  '     m.data.appendChild(moo)
-  ' end for
-
-  ' m.markupgrid.content = m.data
-
+  m.loadItemsTask.startIndex = m.loadedItems
+  m.loadItemsTask.control = "RUN"
 end sub

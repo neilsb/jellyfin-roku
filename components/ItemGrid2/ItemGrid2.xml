@@ -14,7 +14,7 @@
       opacity="0.25"
       />
     <MarkupGrid 
-      id = "exampleMarkupGrid" 
+      id = "itemGrid" 
       translation = "[ 96, 160 ]" 
       itemComponentName = "GridItem" 
       numColumns = "6" 
@@ -35,9 +35,8 @@
 
   </children>
   <interface>
-    <field id="bgUrl" type="string" onChange="setBackground" />
     <field id="itemsPerRow" type="int" />
-    <field id="itemId" type="string" onChange="LibrarySet" />
+    <field id="itemId" type="string" onChange="loadInitialItems" />
     <field id="objects" type="associativearray" onChange="setupRows" />
     <field id="escapeButton" type="string" alwaysNotify="true" />
   </interface>
