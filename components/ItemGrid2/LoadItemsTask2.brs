@@ -27,6 +27,9 @@ sub loadItems()
   resp = APIRequest(url, params)
   data = getJson(resp)
 
+  if data.TotalRecordCount <> invalid then
+    m.top.totalRecordCount = data.TotalRecordCount
+  end if
   
   for each item in data.Items
 
