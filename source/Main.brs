@@ -298,7 +298,11 @@ sub Main()
     else if isNodeEvent(msg, "buttonSelected")
       ' If a button is selected, we have some determining to do
       btn = getButton(msg)
-      if btn.id = "play-button"
+      if btn = invalid then
+        ' this is showing as a significant crash point on Roku Analytics
+        ' checking for invalid should at least prevent hard crash to dashboard
+        ' TODO: Log btn information to server when logging enabled (See jellyfin/jellyfin#5646)
+      else if btn.id = "play-button"
         ' Check is a specific Audio Stream was selected
         audio_stream_idx = 1
         if group.selectedAudioStreamIndex <> invalid
